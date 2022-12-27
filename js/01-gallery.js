@@ -31,18 +31,22 @@ function onPictureClick(event) {
   if (!event.target.classList.contains("gallery__image")) {
     return;
   }
-  basicLightbox
-    .create(
-      `<img class="lightbox__image" src="${event.target.dataset.source}" alt="" />`,
-      {
-        onShow: (instance) => {
-          window.addEventListener("keydown", (event) => {
-            if (event.code === "Escape") {
-              instance.close();
-            }
-          });
-        },
-      }
-    )
-    .show();
+  const instance = basicLightbox.create(
+    `<img class="lightbox__image" src="${event.target.dataset.source}" alt="" />
+  `,
+    {
+      onShow: (instance) => {
+        window.addEventListener("keydown", onEscape);
+      },
+      onClose: (instance) => {
+        window.removeEventListener("keydown", onEscape);
+      },
+    }
+  );
+  instance.show();
+  function onEscape(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
 }
